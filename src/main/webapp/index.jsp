@@ -12,6 +12,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Hello World from HTML!</h1>
+        <% String message = "Hello world from Java"; %>
+        <%=message %>
     </body>
 </html>
