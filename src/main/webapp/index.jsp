@@ -32,5 +32,11 @@
             </p>
             <button type="submit">Submit</button>
         </form>
+
+        <h1>List of the users</h1>
+        <p>Click on the following button to show the list of the user</p>
+        <form action="SvUsers" method="GET">
+            <button type="submit">Show users </button>
+        </form>
     </body>
 </html>

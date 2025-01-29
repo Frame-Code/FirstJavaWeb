@@ -1,13 +1,17 @@
 
 package com.mycompany.firstweb.servelts;
 
+import com.mycompany.firstweb.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -54,7 +58,19 @@ public class SvUsers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        //Creating a logic db
+        List<User> users = new ArrayList<>();
+        users.add(new User(124L, "Isur", "Cantillo", "094124"));
+        users.add(new User(125L, "Verenice", "Jimenez", "094125"));
+        users.add(new User(123L, "Daniel", "Mora", "094123"));
+        
+        //Adding an attribute to the new session
+        HttpSession session = request.getSession();
+        session.setAttribute("ListUsers", users);
+        
+        //Redirecting to  jsp showUsers
+        response.sendRedirect("showUsers.jsp");
     }
 
     /**
