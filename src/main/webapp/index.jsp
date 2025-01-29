@@ -9,11 +9,28 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Form to use JSP</title>
     </head>
     <body>
-        <h1>Hello World from HTML!</h1>
-        <% String message = "Hello world from Java"; %>
-        <%=message %>
+        <h1>Data of the user</h1>
+        <form action="SvUsers" method="POST">
+            <p>
+                <label>ID: </label>
+                <input type="text" name="id">
+            </p>
+            <p>
+                <label>Name: </label>
+                <input type="text" name="name">
+            </p>
+            <p>
+                <label>Last Name: </label>
+                <input type="text" name="lastName">
+            </p>
+            <p>
+                <label>Phone: </label>
+                <input type="text" name="phone">
+            </p>
+            <button type="submit">Submit</button>
+        </form>
     </body>
 </html>
