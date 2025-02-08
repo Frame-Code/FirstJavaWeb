@@ -1,6 +1,7 @@
 
 package com.mycompany.firstweb.model;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,8 +12,8 @@ import javax.persistence.Id;
  * @author Artist-Code
  */
 
-@Entity(name = "user")
-public class User {
+@Entity(name = "User")
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +32,6 @@ public class User {
     }
     
     public User(String name, String lastNames, String phone) {
-        this.id = id;
         this.name = name;
         this.lastNames = lastNames;
         this.phone = phone;

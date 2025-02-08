@@ -6,8 +6,10 @@ import java.util.List;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TransactionRequiredException;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -15,7 +17,7 @@ import javax.persistence.TransactionRequiredException;
  */
 public class UserDaoImpl implements UserDao {
 
-    private EntityManagerFactory emf;
+    private final EntityManagerFactory emf;
 
     public UserDaoImpl() {
         this.emf = Persistence.createEntityManagerFactory("webPU");
@@ -27,17 +29,43 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EntityManager em = getEntityManager();
+        String jpql = "SELECT u FROM User u WHERE u.id = :id ";
+        TypedQuery<User> query = em.createQuery(jpql, User.class);
+        query.setParameter("id", id);
+        User user;
+        try {
+            user = query.getSingleResult();
+            return user;
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<User> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EntityManager em = getEntityManager();
+        String jpql = "SELECT u FROM User u";
+        TypedQuery<User> query = em.createQuery(jpql, User.class);
+        List<User> users;
+        try {
+            users = query.getResultList();
+            return users;
+        } catch (NoResultException e) {
+            System.out.println(e.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EntityManager em = getEntityManager();
+        em.remove(getById(id));
     }
 
     @Override
@@ -48,7 +76,7 @@ public class UserDaoImpl implements UserDao {
             em.persist(object);
             em.getTransaction().commit();
         } catch (IllegalStateException | EntityExistsException | TransactionRequiredException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             em.getTransaction().rollback();
         } finally {
             em.close();
@@ -57,7 +85,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(User object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        EntityManager em = getEntityManager();
+        em.merge(em);
     }
 
 }
