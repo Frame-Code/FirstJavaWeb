@@ -10,23 +10,24 @@ import org.junit.jupiter.api.Test;
  * @author Artist-Code
  */
 public class UserDaoImplTest {
-    private UserDao dao;
+    private UserDao userDao;
 
     public UserDaoImplTest() {
     }
 
     @BeforeEach
     public void setUp() {
-        this.dao = new UserDaoImpl();
+        this.userDao = new UserDaoImpl();
     }
 
-    /**
-     * Test of getById method, of class UserDaoImpl.
+    /** 
+    * Test of getById method, of class UserDaoImpl.
      */
     @Test
     public void testGetById() {
         System.out.println("getById");
-        System.out.println(dao.getById(1L).toString());
+        User user = userDao.getById(1L);
+        System.out.println(user);
     }
 
     /**
@@ -35,7 +36,7 @@ public class UserDaoImplTest {
     @Test
     public void testGetAll() {
         System.out.println("getAll");
-        System.out.println(dao.getAll().toString());
+        System.out.println(userDao.getAll().toString());
     }
 
     /**
@@ -44,7 +45,7 @@ public class UserDaoImplTest {
     @Test
     public void testDeleteById() {
         System.out.println("deleteById");
-        dao.deleteById(1L);
+        userDao.deleteById(1L);
     }
 
     /**
@@ -53,8 +54,8 @@ public class UserDaoImplTest {
     @Test
     public void testCreate() {
         System.out.println("create");
-        User user = new User("Daniel", "Mora", "0967972428");
-        dao.create(user);
+        User user = new User("Daniel", "Mora Cantillo", "0941239261");
+        userDao.create(user);
     }
 
     /**
@@ -63,9 +64,9 @@ public class UserDaoImplTest {
     @Test
     public void testUpdate() {
         System.out.println("update");
-        User user = dao.getById(1L);
-        user.setPhone("0941239261");
-        dao.update(user);
+        User user = userDao.getById(2L);
+        user.setPhone("0967971428");
+        userDao.update(user);
     }
 
 }

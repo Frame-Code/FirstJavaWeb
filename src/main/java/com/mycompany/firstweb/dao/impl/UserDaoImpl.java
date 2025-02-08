@@ -3,11 +3,15 @@ package com.mycompany.firstweb.dao.impl;
 import com.mycompany.firstweb.dao.interfaces.UserDao;
 import com.mycompany.firstweb.model.User;
 import java.util.List;
+import java.lang.IllegalArgumentException;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Persistence;
+import javax.persistence.RollbackException;
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
@@ -17,6 +21,7 @@ import javax.persistence.TypedQuery;
  */
 public class UserDaoImpl implements UserDao {
 
+    private final String TITLE_ERROR_MESSAGE = this.getClass().getName() + ": ";
     private final EntityManagerFactory emf;
 
     public UserDaoImpl() {
@@ -30,18 +35,20 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getById(Long id) {
         EntityManager em = getEntityManager();
-        String jpql = "SELECT u FROM User u WHERE u.id = :id ";
+        String jpql = "SELECT u FROM User u WHERE u.idUser = :id";
         TypedQuery<User> query = em.createQuery(jpql, User.class);
         query.setParameter("id", id);
         User user;
         try {
             user = query.getSingleResult();
             return user;
-        } catch (NoResultException e) {
-            System.out.println(e.getMessage());
+        } catch (NoResultException | NonUniqueResultException e) {
+            System.out.println(TITLE_ERROR_MESSAGE + e.getMessage());
             return null;
         } finally {
-            em.close();
+            if (em.isOpen()) {
+                em.close();
+            }
         }
     }
 
@@ -54,18 +61,33 @@ public class UserDaoImpl implements UserDao {
         try {
             users = query.getResultList();
             return users;
-        } catch (NoResultException e) {
-            System.out.println(e.getMessage());
+        } catch (NoResultException | NonUniqueResultException e) {
+            System.out.println(TITLE_ERROR_MESSAGE + e.getMessage());
             return null;
         } finally {
-            em.close();
+            if (em.isOpen()) {
+                em.close();
+            }
         }
     }
 
     @Override
     public void deleteById(Long id) {
         EntityManager em = getEntityManager();
-        em.remove(getById(id));
+        try {
+            em.getTransaction().begin();
+            User user = em.getReference(User.class, id);
+            em.remove(user);
+            em.getTransaction().commit();
+        } catch (IllegalStateException | TransactionRequiredException | IllegalArgumentException | EntityNotFoundException | RollbackException e) {
+            System.out.println(TITLE_ERROR_MESSAGE + e.getMessage());
+            em.getTransaction().rollback();
+        } finally {
+            if (em.isOpen()) {
+                em.close();
+            }
+        }
+
     }
 
     @Override
@@ -76,7 +98,7 @@ public class UserDaoImpl implements UserDao {
             em.persist(object);
             em.getTransaction().commit();
         } catch (IllegalStateException | EntityExistsException | TransactionRequiredException e) {
-            System.out.println(e.getMessage());
+            System.out.println(TITLE_ERROR_MESSAGE + e.getMessage());
             em.getTransaction().rollback();
         } finally {
             em.close();
@@ -86,7 +108,16 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User object) {
         EntityManager em = getEntityManager();
-        em.merge(em);
+        try {
+            em.getTransaction().begin();
+            em.merge(object);
+            em.getTransaction().commit();
+        } catch (IllegalStateException | EntityExistsException | TransactionRequiredException | IllegalArgumentException e) {
+            System.out.println(TITLE_ERROR_MESSAGE + e.getMessage());
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 /**
  *
  * @author Artist-Code
+ * @param <T> The generic class 
  */
 public interface GenericDao<T> {
     T getById(Long id);

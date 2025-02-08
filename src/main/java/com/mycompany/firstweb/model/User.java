@@ -16,7 +16,8 @@ import javax.persistence.Id;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idUser;
+    
     private String name;
     private String lastNames;
     private String phone;
@@ -24,8 +25,8 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long id, String name, String lastNames, String phone) {
-        this.id = id;
+    public User(Long idUser, String name, String lastNames, String phone) {
+        this.idUser = idUser;
         this.name = name;
         this.lastNames = lastNames;
         this.phone = phone;
@@ -37,12 +38,8 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Long getIdUser() {
+        return idUser;
     }
 
     public String getName() {
@@ -71,7 +68,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", name=" + name + ", lastNames=" + lastNames + ", phone=" + phone + '}';
+        return "User{" + "idUser=" + idUser + ", name=" + name + ", lastNames=" + lastNames + ", phone=" + phone + '}';
     }
     
     
