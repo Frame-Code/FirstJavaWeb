@@ -4,6 +4,7 @@ package com.mycompany.firstweb.dto;
 /**
  *
  * @author Artist-Code
+ * @param <T>
  */
 public class ResultDTO<T> {
     private final T data;

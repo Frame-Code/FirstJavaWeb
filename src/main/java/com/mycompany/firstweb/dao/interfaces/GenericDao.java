@@ -12,7 +12,7 @@ import java.util.List;
 public interface GenericDao<T> {
     ResultDTO<T> findById(Long id);
     ResultDTO<List<T>> findAll();
-    ResultDTO<T> deleteById(Long id);
+    ResultDTO<String> deleteById(Long id);
     ResultDTO<T> create(T object);
     ResultDTO<T> update(T object);
 }

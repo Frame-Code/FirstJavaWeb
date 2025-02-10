@@ -2,7 +2,7 @@ package com.mycompany.firstweb.dao.impl;
 
 import com.mycompany.firstweb.dto.ResultDTO;
 import com.mycompany.firstweb.dao.interfaces.UserDao;
-import com.mycompany.firstweb.model.User;
+import com.mycompany.firstweb.entities.User;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,14 +76,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public ResultDTO<User> deleteById(Long id) {
+    public ResultDTO<String> deleteById(Long id) {
         EntityManager em = getEntityManager();
         try {
             em.getTransaction().begin();
             User user = em.getReference(User.class, id);
             em.remove(user);
             em.getTransaction().commit();
-            return new ResultDTO<>(null, true, "User deleted");
+            return new ResultDTO<>(String.valueOf(id), true, "User deleted");
         } catch (IllegalStateException e) {
             LOG.log(Level.WARNING, "Ilegal state exception");
             em.getTransaction().rollback();
@@ -119,7 +119,7 @@ public class UserDaoImpl implements UserDao {
             em.getTransaction().begin();
             em.persist(object);
             em.getTransaction().commit();
-            return new ResultDTO<>(null, true, "User created correctly");
+            return new ResultDTO<>(object, true, "User created correctly");
         } catch (IllegalStateException e) {
             LOG.log(Level.WARNING, "Ilegal state exception");
             em.getTransaction().rollback();
@@ -152,7 +152,7 @@ public class UserDaoImpl implements UserDao {
             em.getTransaction().begin();
             em.merge(object);
             em.getTransaction().commit();
-            return new ResultDTO<>(null, true, "User updated correctly");
+            return new ResultDTO<>(object, true, "User updated correctly");
         } catch (IllegalStateException e) {
             LOG.log(Level.WARNING, "Ilegal state exception");
             em.getTransaction().rollback();

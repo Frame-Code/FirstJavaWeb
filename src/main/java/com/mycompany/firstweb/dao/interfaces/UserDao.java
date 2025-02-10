@@ -1,7 +1,7 @@
 
 package com.mycompany.firstweb.dao.interfaces;
 
-import com.mycompany.firstweb.model.User;
+import com.mycompany.firstweb.entities.User;
 
 /**
  *

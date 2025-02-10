@@ -1,5 +1,6 @@
 package com.mycompany.firstweb.model;
 
+import com.mycompany.firstweb.entities.User;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

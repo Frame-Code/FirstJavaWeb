@@ -1,5 +1,5 @@
 
-package com.mycompany.firstweb.model;
+package com.mycompany.firstweb.entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;

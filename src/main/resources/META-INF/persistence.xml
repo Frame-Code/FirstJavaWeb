@@ -4,7 +4,7 @@
   <persistence-unit name="webPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <!--<jta-data-source>web</jta-data-source>-->
-    <class>com.mycompany.firstweb.model.User</class>
+    <class>com.mycompany.firstweb.entities.User</class>
     <validation-mode>NONE</validation-mode>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/firstweb?serverTimezone=UTC"/>

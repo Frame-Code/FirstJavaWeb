@@ -1,7 +1,8 @@
 package com.mycompany.firstweb.dao.impl;
 
 import com.mycompany.firstweb.dao.interfaces.UserDao;
-import com.mycompany.firstweb.model.User;
+import com.mycompany.firstweb.dto.ResultDTO;
+import com.mycompany.firstweb.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ public class UserDaoImplTest {
     @Test
     public void testGetById() {
         System.out.println("getById");
-        User user = userDao.getById(1L);
+        ResultDTO<User> user = userDao.findById(1L);
         System.out.println(user);
     }
 
@@ -36,7 +37,7 @@ public class UserDaoImplTest {
     @Test
     public void testGetAll() {
         System.out.println("getAll");
-        System.out.println(userDao.getAll().toString());
+        System.out.println(userDao.findAll().toString());
     }
 
     /**
@@ -64,9 +65,9 @@ public class UserDaoImplTest {
     @Test
     public void testUpdate() {
         System.out.println("update");
-        User user = userDao.getById(2L);
-        user.setPhone("0967971428");
-        userDao.update(user);
+        ResultDTO<User> user = userDao.findById(2L);
+        user.getData().setPhone("0967971428");
+        System.out.println(userDao.update(user.getData()));
     }
 
 }

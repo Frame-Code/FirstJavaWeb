@@ -1,7 +1,7 @@
 
 package com.mycompany.firstweb.servelts;
 
-import com.mycompany.firstweb.model.User;
+import com.mycompany.firstweb.entities.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
