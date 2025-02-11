@@ -14,7 +14,7 @@
     <body>
         <h1>Data of the user</h1>
         <form action="SvUsers" method="POST">
-            <p>
+            <p> 
                 <label>Name: </label>
                 <input type="text" name="name">
             </p>
