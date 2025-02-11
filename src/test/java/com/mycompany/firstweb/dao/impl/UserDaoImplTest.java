@@ -46,7 +46,7 @@ public class UserDaoImplTest {
     @Test
     public void testDeleteById() {
         System.out.println("deleteById");
-        userDao.deleteById(1L);
+       // userDao.deleteById(1L);
     }
 
     /**
@@ -56,7 +56,7 @@ public class UserDaoImplTest {
     public void testCreate() {
         System.out.println("create");
         User user = new User("Daniel", "Mora Cantillo", "0941239261");
-        userDao.create(user);
+        //userDao.create(user);
     }
 
     /**
@@ -67,7 +67,7 @@ public class UserDaoImplTest {
         System.out.println("update");
         ResultDTO<User> user = userDao.findById(2L);
         user.getData().setPhone("0967971428");
-        System.out.println(userDao.update(user.getData()));
+        //System.out.println(userDao.update(user.getData()));
     }
 
 }

@@ -1,12 +1,14 @@
 
 package com.mycompany.firstweb.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Artist-Code
  * @param <T>
  */
-public class ResultDTO<T> {
+public class ResultDTO<T> implements Serializable{
     private final T data;
     private final boolean success;
     private final String errorMessage;

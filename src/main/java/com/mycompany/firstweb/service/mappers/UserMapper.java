@@ -12,5 +12,9 @@ public class UserMapper {
     public static UserDTO toDTO(User user) {
         return new UserDTO(user.getName(), user.getLastNames(), user.getPhone());
     }
+    
+    public static User toEntity(UserDTO userDTO) {
+        return new User(userDTO.getName(), userDTO.getLastName(), userDTO.getPhone());
+    }
 
 }

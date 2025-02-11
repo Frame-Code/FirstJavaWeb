@@ -4,8 +4,8 @@
     Author     : Artist-Code
 --%>
 
+<%@page import="com.mycompany.firstweb.dto.UserDTO"%>
 <%@page import="java.util.List"%>
-<%@page import="com.mycompany.firstweb.model.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -36,14 +36,13 @@
 
         <!<!--Second way to do this -->
         <%
-            List<User> users = (List) request.getSession().getAttribute("ListUsers");
+            List<UserDTO> users = (List) request.getSession().getAttribute("ListUsers");
             int cont = 1;
-            for (User user : users) {
+            for (UserDTO user : users) {
         %>
             <p><b>User N°<%=cont%></b></p>
-            <p>Id: <%=user.getId()%> </p>
             <p>Name: <%=user.getName()%> </p>
-            <p>Last Name: <%=user.getLastNames()%> </p>
+            <p>Last Name: <%=user.getLastName()%> </p>
             <p>Phone: <%=user.getPhone()%> </p>
             <p>-------------------------<br></p>
         <%

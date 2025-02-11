@@ -6,6 +6,7 @@ import com.mycompany.firstweb.dto.ResultDTO;
 import com.mycompany.firstweb.dto.UserDTO;
 import com.mycompany.firstweb.entities.User;
 import com.mycompany.firstweb.service.mappers.ResultMapper;
+import com.mycompany.firstweb.service.mappers.UserMapper;
 import java.util.List;
 
 /**
@@ -35,17 +36,20 @@ public class UserService {
         return userDao.deleteById(id);
     }
 
-    public ResultDTO<UserDTO> create(String name, String lastName, String phone) {
-        ResultDTO<User> result = userDao.create(new User(name, lastName, phone));
+    public ResultDTO<UserDTO> create(UserDTO userDTO) {
+        ResultDTO<User> result = userDao.create(UserMapper.toEntity(userDTO));
         return ResultMapper.toDTO(result);
         
     }
 
-    public ResultDTO<UserDTO> update(Long id, String name, String lastName, String phone) {
+    public ResultDTO<UserDTO> update(Long id, UserDTO userDTO) {
         ResultDTO<User> result = userDao.findById(id);
-        result.getData().setName(name);
-        result.getData().setLastNames(lastName);
-        result.getData().setPhone(phone);
+        if(!ResultMapper.isSuccessResult(result)) {
+            return ResultMapper.toEmptyDTO(result);
+        }
+        result.getData().setName(userDTO.getName());
+        result.getData().setLastNames(userDTO.getLastName());
+        result.getData().setPhone(userDTO.getPhone());
         
         ResultDTO<User> resultUpdate = userDao.update(result.getData());
         return ResultMapper.toDTO(resultUpdate);

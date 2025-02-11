@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ResultMapper {
 
-    private static <T> boolean isSuccessResult(ResultDTO<T> result) {
+    public static <T> boolean isSuccessResult(ResultDTO<T> result) {
         if (result.getData() == null || !result.isSuccess()) {
             return false;
         } else if (result.isSuccess() && result.getData() != null) {

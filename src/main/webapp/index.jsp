@@ -15,10 +15,6 @@
         <h1>Data of the user</h1>
         <form action="SvUsers" method="POST">
             <p>
-                <label>ID: </label>
-                <input type="text" name="id">
-            </p>
-            <p>
                 <label>Name: </label>
                 <input type="text" name="name">
             </p>

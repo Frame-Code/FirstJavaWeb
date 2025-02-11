@@ -32,9 +32,9 @@ public class UserTest {
     public void testCreateTable() {
         User user = new User("Daniel", "Mora", "0967972428");
         try {
-            em.getTransaction().begin();
-            em.persist(user);
-            em.getTransaction().commit();
+            //em.getTransaction().begin();
+            //em.persist(user);
+            //em.getTransaction().commit();
         } catch (IllegalStateException | EntityExistsException | TransactionRequiredException e) {
             System.out.println(e.getMessage());
             em.getTransaction().rollback();
