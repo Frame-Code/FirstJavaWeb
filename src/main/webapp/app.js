@@ -7,7 +7,7 @@ d.querySelector("#btnSubmit").addEventListener("click", function (e) {
         phone: d.querySelector("#lblPhone").value
     };
     console.log(userData);
-    fetch("SvUsers", {
+    fetch("users", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

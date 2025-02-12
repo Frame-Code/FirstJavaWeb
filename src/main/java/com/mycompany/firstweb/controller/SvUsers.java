@@ -11,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +19,7 @@ import org.json.JSONObject;
  *
  * @author Artist-Code
  */
-@WebServlet(name = "SvUsers", urlPatterns = {"/SvUsers"})
+@WebServlet(name = "usersServlet", urlPatterns = {"/users"})
 public class SvUsers extends HttpServlet {
 
     private final UserService userService = new UserService();
@@ -48,14 +47,6 @@ public class SvUsers extends HttpServlet {
         } catch(JSONException e) {
             response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
         }
-
-        /*
-        //Adding an attribute to the new session
-        HttpSession session = request.getSession();
-        session.setAttribute("ListUsers", usersDTO);
-
-        //Redirecting to  jsp showUsers
-        response.sendRedirect("showUsers.jsp");*/
     }
 
     /**
@@ -127,7 +118,7 @@ public class SvUsers extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "User API Servlet";
     }// </editor-fold>
 
 }
