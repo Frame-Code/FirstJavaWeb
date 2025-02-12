@@ -1,6 +1,5 @@
 package com.mycompany.firstweb.controller;
 
-import com.google.gson.Gson;
 import com.mycompany.firstweb.dto.ResultDTO;
 import com.mycompany.firstweb.dto.UserDTO;
 import com.mycompany.firstweb.service.UserService;
@@ -13,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -35,7 +36,7 @@ public class SvUsers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //ResultDTO<List<UserDTO>> resultDTO = userService.findAll();
+        // ResultDTO<List<UserDTO>> resultDTO = userService.findAll();
 
         List<UserDTO> usersDTO = userService.findAll().getData();
 
@@ -58,12 +59,55 @@ public class SvUsers extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        //Verifing if the request have a json format
+        String contentType = request.getContentType();
+        if (contentType == null || !contentType.equals("application/json")) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JSON format unrecognized");
+            return;
+        }
+
+        //Read the body of the request
         BufferedReader reader = request.getReader();
-        Gson gson = new Gson();
-        UserDTO userDTO = gson.fromJson(reader, UserDTO.class);
-        System.out.println(userDTO);
-        //userService.create(userDTO);
-        response.sendRedirect("index.jsp");
+        StringBuilder jsonString = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonString.append(line);
+        }
+
+        if (jsonString.toString().trim().isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The body of the request is empty");
+            return;
+        }
+
+        try {
+            //Converting the JSON to a object and save it
+            JSONObject jsonObject = new JSONObject(jsonString.toString());
+            UserDTO userDTO = new UserDTO(jsonObject.getString("name"),
+                    jsonObject.getString("lastName"),
+                    jsonObject.getString("phone"));
+            ResultDTO<UserDTO> result = userService.create(userDTO);
+
+            //Verifing if the save was success
+            if (!result.isSuccess() || result.getData() == null) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, result.getErrorMessage());
+                return;
+            }
+
+            //Creating the response with JSON
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_CREATED);
+
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("message", "User created correclty");
+            
+            response.getWriter().write(jsonResponse.toString());
+            
+            response.sendRedirect("index.html");
+        } catch (JSONException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JSON");
+        }
     }
 
     /**
