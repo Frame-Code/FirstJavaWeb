@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,15 +38,24 @@ public class SvUsers extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // ResultDTO<List<UserDTO>> resultDTO = userService.findAll();
-
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         List<UserDTO> usersDTO = userService.findAll().getData();
+        try {
+            JSONArray jsonArray = new JSONArray(usersDTO);
+            response.getWriter().write(jsonArray.toString());
+            
+        } catch(JSONException e) {
+            response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
+        }
 
+        /*
         //Adding an attribute to the new session
         HttpSession session = request.getSession();
         session.setAttribute("ListUsers", usersDTO);
 
         //Redirecting to  jsp showUsers
-        response.sendRedirect("showUsers.jsp");
+        response.sendRedirect("showUsers.jsp");*/
     }
 
     /**
@@ -101,9 +111,9 @@ public class SvUsers extends HttpServlet {
 
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("message", "User created correclty");
-            
+
             response.getWriter().write(jsonResponse.toString());
-            
+
             response.sendRedirect("index.html");
         } catch (JSONException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JSON");
