@@ -23,16 +23,7 @@ import org.json.JSONTokener;
 public class SvUsers extends HttpServlet {
 
     private final UserService userService = new UserService();
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,15 +42,7 @@ public class SvUsers extends HttpServlet {
             sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet- specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -105,26 +88,6 @@ public class SvUsers extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Long idUser = Long.valueOf(request.getParameter("id"));
-            ResultDTO<String> result = userService.deleteById(idUser);
-
-            if (result.getData() == null || !result.isSuccess()) {
-                sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, result.getErrorMessage());
-                return;
-            }
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write(new JSONObject().put("message", "User deleted succesfully").toString());
-        } catch(NumberFormatException e) {
-            sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, "ID invalid");
-        }
-
-    }
 
     private void sendJsonError(HttpServletResponse response, int statusCode, String message) throws IOException {
         response.setContentType("application/json");

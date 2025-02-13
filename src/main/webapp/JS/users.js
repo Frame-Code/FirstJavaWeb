@@ -3,7 +3,7 @@ window.addEventListener("load", getUsers());
 
 async function getUsers() {
     try {
-        const response = await fetch("users", {
+        const response = await fetch("http://localhost:8080/FirstWeb/users", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
