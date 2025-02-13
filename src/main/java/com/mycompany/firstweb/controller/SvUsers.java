@@ -3,7 +3,6 @@ package com.mycompany.firstweb.controller;
 import com.mycompany.firstweb.dto.ResultDTO;
 import com.mycompany.firstweb.dto.UserDTO;
 import com.mycompany.firstweb.service.UserService;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  *
@@ -36,16 +36,19 @@ public class SvUsers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // ResultDTO<List<UserDTO>> resultDTO = userService.findAll();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        List<UserDTO> usersDTO = userService.findAll().getData();
+        ResultDTO<List<UserDTO>> resultDTO = userService.findAll();
+        if (resultDTO.getData() == null || !resultDTO.isSuccess()) {
+            sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, resultDTO.getErrorMessage());
+            return;
+        }
         try {
-            JSONArray jsonArray = new JSONArray(usersDTO);
+            JSONArray jsonArray = new JSONArray(resultDTO.getData());
             response.getWriter().write(jsonArray.toString());
-            
-        } catch(JSONException e) {
-            response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
+
+        } catch (JSONException e) {
+            sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -64,34 +67,28 @@ public class SvUsers extends HttpServlet {
         //Verifing if the request have a json format
         String contentType = request.getContentType();
         if (contentType == null || !contentType.equals("application/json")) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JSON format unrecognized");
-            return;
-        }
-
-        //Read the body of the request
-        BufferedReader reader = request.getReader();
-        StringBuilder jsonString = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            jsonString.append(line);
-        }
-
-        if (jsonString.toString().trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The body of the request is empty");
+            sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Expected JSON request");
             return;
         }
 
         try {
             //Converting the JSON to a object and save it
-            JSONObject jsonObject = new JSONObject(jsonString.toString());
-            UserDTO userDTO = new UserDTO(jsonObject.getString("name"),
-                    jsonObject.getString("lastName"),
-                    jsonObject.getString("phone"));
+            JSONObject jsonObject = new JSONObject(new JSONTokener(request.getReader()));
+            if(!jsonObject.has("name") || !jsonObject.has("lastName") || !jsonObject.has("phone")) {
+                sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, "Missing required fields");
+                return;
+            }
+            
+            
+            UserDTO userDTO = new UserDTO(
+                jsonObject.getString("name"),
+                jsonObject.getString("lastName"),
+                jsonObject.getString("phone"));
             ResultDTO<UserDTO> result = userService.create(userDTO);
 
             //Verifing if the save was success
             if (!result.isSuccess() || result.getData() == null) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, result.getErrorMessage());
+                sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, result.getErrorMessage());
                 return;
             }
 
@@ -104,13 +101,18 @@ public class SvUsers extends HttpServlet {
             jsonResponse.put("message", "User created correclty");
 
             response.getWriter().write(jsonResponse.toString());
-
-            response.sendRedirect("index.html");
         } catch (JSONException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JSON");
+            sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, "Invalid JSON format");
         }
     }
 
+    private void sendJsonError(HttpServletResponse response, int statusCode, String message) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(statusCode);
+        response.getWriter().write(new JSONObject().put("Error", message).toString());
+    }
+    
     /**
      * Returns a short description of the servlet.
      *

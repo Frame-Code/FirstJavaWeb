@@ -1,5 +1,4 @@
 const d = document;
-
 window.addEventListener("load", getUsers());
 
 async function getUsers() {
@@ -11,8 +10,7 @@ async function getUsers() {
             }
 
         });
-        let data = await response.json();
-        console.log(data);
+        const data = await response.json();
         loadUsers(data);
     } catch (error) {
         console.log("Error: ", error);
@@ -20,14 +18,13 @@ async function getUsers() {
 }
 function loadUsers(data) {
     let divUsers = d.querySelector("#users");
-    data.json().foreach(obj => {
+    for (let i = 0; i < data.length; i++) {
         divUsers.innerHTML += `<br/>
-        <p>name: ${obj.name}</p>
-        <p>last name: ${obj.lastName}</p>
-        <p>last name: ${obj.phone}</p>
-        <br/>
-`;
-    });
+        <p>name: ${data[i].name}</p>
+        <p>last name: ${data[i].lastName}</p>
+        <p>phone: ${data[i].phone}</p>
+        <br/>`;
+    }
 }
 
 
