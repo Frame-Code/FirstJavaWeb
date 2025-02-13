@@ -74,16 +74,15 @@ public class SvUsers extends HttpServlet {
         try {
             //Converting the JSON to a object and save it
             JSONObject jsonObject = new JSONObject(new JSONTokener(request.getReader()));
-            if(!jsonObject.has("name") || !jsonObject.has("lastName") || !jsonObject.has("phone")) {
+            if (!jsonObject.has("name") || !jsonObject.has("lastName") || !jsonObject.has("phone")) {
                 sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, "Missing required fields");
                 return;
             }
-            
-            
+
             UserDTO userDTO = new UserDTO(
-                jsonObject.getString("name"),
-                jsonObject.getString("lastName"),
-                jsonObject.getString("phone"));
+                    jsonObject.getString("name"),
+                    jsonObject.getString("lastName"),
+                    jsonObject.getString("phone"));
             ResultDTO<UserDTO> result = userService.create(userDTO);
 
             //Verifing if the save was success
@@ -106,13 +105,34 @@ public class SvUsers extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            Long idUser = Long.valueOf(request.getParameter("id"));
+            ResultDTO<String> result = userService.deleteById(idUser);
+
+            if (result.getData() == null || !result.isSuccess()) {
+                sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, result.getErrorMessage());
+                return;
+            }
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(new JSONObject().put("message", "User deleted succesfully").toString());
+        } catch(NumberFormatException e) {
+            sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, "ID invalid");
+        }
+
+    }
+
     private void sendJsonError(HttpServletResponse response, int statusCode, String message) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(statusCode);
         response.getWriter().write(new JSONObject().put("Error", message).toString());
     }
-    
+
     /**
      * Returns a short description of the servlet.
      *
