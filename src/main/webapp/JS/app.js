@@ -37,3 +37,18 @@ d.querySelector("#btnDelete").addEventListener("click", function (e) {
 
 });
 
+d.querySelector("#btnSearch").addEventListener("click", function (e) {
+    const id = d.querySelector("#idToUpdate").value;
+    fetch(`http://localhost:8080/FirstWeb/edit?id=${id}`, {
+        method: "GET",
+        headers: {
+            "Content-type": "application/json"
+        }
+    })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                window.open(`edit_user.html?id=${id}&name=${response.name}&lastName=${response.lastName}&phone=${response.phone}`, "_self");
+            })
+            .catch(error => console.log(error));
+});
