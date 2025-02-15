@@ -18,7 +18,6 @@ d.querySelector("#btnUpdate").addEventListener("click", function (e) {
         lastName: d.querySelector("#lblLastName").value,
         phone: d.querySelector("#lblPhone").value
     };
-    console.log(user);
     fetch("http://localhost:8080/FirstWeb/edit", {
         method: "POST",
         headers: {
